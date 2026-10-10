@@ -3,105 +3,93 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Temp Mail</title>
+<title>Temp Mail — Saved + Search</title>
 <style>
 :root{--bg:#07090f;--card:#0e121b;--elev:#151b27;--border:#1e2636;--text:#eef2ff;--muted:#8b95a8;--accent:#6ee7b7;--blue:#60a5fa;--warn:#fbbf24;--danger:#fb7185}
 *{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5}
 body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 20% -10%,rgba(110,231,183,.12),transparent),radial-gradient(ellipse 60% 40% at 90% 10%,rgba(96,165,250,.1),transparent);pointer-events:none;z-index:0}
-.wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:28px 18px 64px}
-header{text-align:center;margin-bottom:28px}.logo{font-weight:800;font-size:1.35rem;display:inline-flex;align-items:center;gap:10px}
-.mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--blue));display:grid;place-items:center;color:#041016}
-.tag{color:var(--muted);font-size:.9rem;margin-top:8px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px}
-.label{font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch}
-.email{flex:1;min-width:200px;background:var(--elev);border:1px solid var(--border);border-radius:12px;padding:14px 16px;font-weight:600;color:var(--accent);word-break:break-all}
-.email.empty{color:var(--muted);font-weight:500}
-.btn{border:none;border-radius:12px;padding:12px 16px;font-weight:700;font-size:.88rem;cursor:pointer;white-space:nowrap}
-.btn:disabled{opacity:.55;cursor:not-allowed}
-.primary{background:linear-gradient(135deg,var(--accent),#34d399);color:#042f1a}
-.ghost{background:var(--elev);color:var(--text);border:1px solid var(--border)}
-.btn-login{background:linear-gradient(135deg,#60a5fa,#3b82f6);color:#fff;flex:1}
-.btn-verify{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#1a1200;flex:1}
-.btn-link{background:var(--elev);color:var(--accent);border:1px solid var(--border);flex:1;font-size:.82rem}
-.meta{display:flex;justify-content:space-between;margin-top:14px;font-size:.82rem;color:var(--muted);flex-wrap:wrap;gap:8px}
+.wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:24px 16px 64px}
+header{text-align:center;margin-bottom:22px}.logo{font-weight:800;font-size:1.3rem;display:inline-flex;align-items:center;gap:10px}
+.mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--blue));display:grid;place-items:center;color:#041016}
+.tag{color:var(--muted);font-size:.88rem;margin-top:6px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:14px}
+.label{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch}
+.email-box{flex:1;min-width:180px;background:var(--elev);border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-weight:600;color:var(--accent);word-break:break-all;font-size:.98rem}
+.email-box.empty{color:var(--muted);font-weight:500}
+input.search{flex:1;min-width:180px;background:var(--elev);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-size:.95rem;outline:none}
+input.search:focus{border-color:var(--blue)}input.search::placeholder{color:var(--muted)}
+.btn{border:none;border-radius:12px;padding:11px 14px;font-weight:700;font-size:.85rem;cursor:pointer;white-space:nowrap}.btn:disabled{opacity:.5;cursor:not-allowed}
+.primary{background:linear-gradient(135deg,var(--accent),#34d399);color:#042f1a}.ghost{background:var(--elev);color:var(--text);border:1px solid var(--border)}.blue{background:linear-gradient(135deg,#60a5fa,#3b82f6);color:#fff}
+.btn-login{background:linear-gradient(135deg,#60a5fa,#3b82f6);color:#fff;flex:1}.btn-verify{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#1a1200;flex:1}
+.btn-link{background:var(--elev);color:var(--accent);border:1px solid var(--border);flex:1;font-size:.8rem}
+.btn-danger{background:rgba(251,113,133,.15);color:var(--danger);border:1px solid rgba(251,113,133,.3);padding:6px 10px;font-size:.75rem}
+.meta{display:flex;justify-content:space-between;margin-top:12px;font-size:.8rem;color:var(--muted);flex-wrap:wrap;gap:6px}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block;margin-right:6px}.dot.live{background:var(--accent);box-shadow:0 0 8px var(--accent)}.dot.busy{background:var(--blue)}
-.err{background:rgba(251,113,133,.1);border:1px solid rgba(251,113,133,.3);color:var(--danger);border-radius:12px;padding:12px;margin-bottom:12px;display:none;font-size:.88rem}
-.ih{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px}.ih h2{font-size:1rem}
-.empty{text-align:center;padding:36px;color:var(--muted)}
-.msg{background:var(--elev);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px}
+.saved-list{display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto}
+.saved-item{display:flex;align-items:center;gap:8px;background:var(--elev);border:1px solid var(--border);border-radius:10px;padding:10px 12px;cursor:pointer}.saved-item:hover{border-color:#2d3a52}.saved-item.active{border-color:var(--accent);background:rgba(110,231,183,.06)}
+.saved-email{flex:1;font-size:.88rem;font-weight:600;color:var(--accent);word-break:break-all}.saved-meta{font-size:.7rem;color:var(--muted);white-space:nowrap}
+.saved-empty{text-align:center;color:var(--muted);font-size:.88rem;padding:16px}
+.ih{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px}.ih h2{font-size:1rem}
+.empty{text-align:center;padding:32px 12px;color:var(--muted);font-size:.9rem}
+.msg{background:var(--elev);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:10px}
 .msg.login-type{border-color:rgba(96,165,250,.45)}.msg.verify-type{border-color:rgba(251,191,36,.45)}.msg.generic-type{border-color:rgba(110,231,183,.35)}
-.msg-top{cursor:pointer}.from{font-weight:600;font-size:.92rem}.subj{color:var(--muted);font-size:.86rem;margin:4px 0}.time{font-size:.75rem;color:var(--muted);opacity:.8}
-.magic{margin-top:12px;padding:12px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--border)}
-.magic.login{border-color:rgba(96,165,250,.3);background:rgba(96,165,250,.08)}
-.magic.verify{border-color:rgba(251,191,36,.3);background:rgba(251,191,36,.08)}
-.ml{font-size:.78rem;font-weight:700;margin-bottom:10px}.ml.login{color:var(--blue)}.ml.verify{color:var(--warn)}
-.ma{display:flex;gap:8px;flex-wrap:wrap}
-.mu{margin-top:8px;font-size:.7rem;color:var(--muted);word-break:break-all;opacity:.85}
-.body{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:.88rem;white-space:pre-wrap;word-break:break-word;max-height:280px;overflow:auto}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--elev);border:1px solid var(--border);padding:10px 18px;border-radius:999px;font-size:.85rem;font-weight:600;z-index:50;opacity:0;pointer-events:none;transition:.2s;max-width:90%;text-align:center}.toast.show{opacity:1}
-footer{text-align:center;margin-top:28px;font-size:.78rem;color:var(--muted);opacity:.8}
+.msg-top{cursor:pointer}.from{font-weight:600;font-size:.9rem}.subj{color:var(--muted);font-size:.84rem;margin:3px 0}.time{font-size:.72rem;color:var(--muted);opacity:.85}
+.magic{margin-top:10px;padding:10px;border-radius:10px;background:rgba(0,0,0,.25);border:1px solid var(--border)}
+.magic.login{border-color:rgba(96,165,250,.3);background:rgba(96,165,250,.08)}.magic.verify{border-color:rgba(251,191,36,.3);background:rgba(251,191,36,.08)}
+.ml{font-size:.76rem;font-weight:700;margin-bottom:8px}.ml.login{color:var(--blue)}.ml.verify{color:var(--warn)}
+.ma{display:flex;gap:8px;flex-wrap:wrap}.mu{margin-top:6px;font-size:.68rem;color:var(--muted);word-break:break-all;opacity:.85}
+.body{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:.86rem;white-space:pre-wrap;word-break:break-word;max-height:260px;overflow:auto}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--elev);border:1px solid var(--border);padding:10px 16px;border-radius:999px;font-size:.84rem;font-weight:600;z-index:50;opacity:0;pointer-events:none;transition:.2s;max-width:90%;text-align:center}.toast.show{opacity:1}
+.err{background:rgba(251,113,133,.1);border:1px solid rgba(251,113,133,.3);color:var(--danger);border-radius:12px;padding:11px 12px;font-size:.86rem;margin-bottom:12px;display:none}
+footer{text-align:center;margin-top:24px;font-size:.75rem;color:var(--muted);opacity:.8}
 </style>
 </head>
 <body>
 <div class="wrap">
-<header><div class="logo"><span class="mark">✉</span>Temp Mail</div><p class="tag">Email sementara · deteksi magic link · tanpa daftar</p></header>
+<header><div class="logo"><span class="mark">✉</span>Temp Mail</div><p class="tag">Generate · Saved Email · Search inbox · Magic link</p></header>
 <div class="err" id="error"></div>
-<section class="card">
-<div class="label">Alamat email</div>
-<div class="row">
-<div class="email empty" id="emailDisplay">Belum ada email — klik Generate</div>
-<button class="btn ghost" id="btnCopy" disabled onclick="copyEmail()">Copy</button>
-<button class="btn primary" id="btnGen" onclick="generateEmail()">Generate</button>
-</div>
-<div class="meta"><span id="statusLine"><span class="dot"></span>Siaga</span><span>Auto-refresh 8s</span></div>
-</section>
-<section class="card">
-<div class="ih"><h2>Inbox <span id="msgCount" style="color:var(--muted);font-weight:500"></span></h2>
-<button class="btn ghost" id="btnRefresh" disabled onclick="refreshInbox(true)">Refresh</button></div>
-<div id="inbox"><div class="empty">Generate email dulu, lalu pesan masuk akan muncul di sini.</div></div>
-</section>
-<footer>Proxy backend · Deteksi magic link Alight Creative</footer>
+<section class="card"><div class="label">Alamat email aktif</div><div class="row"><div class="email-box empty" id="emailDisplay">Belum ada email — klik Generate</div><button class="btn ghost" id="btnCopy" disabled onclick="copyEmail()">Copy</button><button class="btn primary" id="btnGen" onclick="generateEmail()">Generate</button></div><div class="meta"><span id="statusLine"><span class="dot"></span>Siaga</span><span>Auto-save · refresh 8s</span></div></section>
+<section class="card"><div class="label">Search inbox by email</div><div class="row"><input class="search" id="searchInput" type="email" placeholder="ketik email… contoh: abc@domain.com" autocomplete="off"/><button class="btn blue" onclick="searchByEmail()">Cari Inbox</button></div></section>
+<section class="card"><div class="ih"><div class="label" style="margin:0">Saved Email <span id="savedCount" style="color:var(--muted);font-weight:500"></span></div><button class="btn ghost" style="padding:6px 10px;font-size:.75rem" onclick="clearSaved()">Clear</button></div><div class="saved-list" id="savedList"><div class="saved-empty">Belum ada email tersimpan. Generate akan auto-save.</div></div></section>
+<section class="card"><div class="ih"><h2>Inbox <span id="msgCount" style="color:var(--muted);font-weight:500"></span></h2><button class="btn ghost" id="btnRefresh" disabled onclick="refreshInbox(true)">Refresh</button></div><div id="inbox"><div class="empty">Generate atau pilih saved email / search email dulu.</div></div></section>
+<footer>Proxy backend · Saved auto · Deteksi magic link Alight</footer>
 </div>
 <div class="toast" id="toast"></div>
 <script>
-const KEY='tempmail_email';
-let email=localStorage.getItem(KEY)||'',timer=null,expanded=null,lastMsgs=[];
-const $={
- email:document.getElementById('emailDisplay'),
- gen:document.getElementById('btnGen'),
- copy:document.getElementById('btnCopy'),
- ref:document.getElementById('btnRefresh'),
- inbox:document.getElementById('inbox'),
- count:document.getElementById('msgCount'),
- status:document.getElementById('statusLine'),
- err:document.getElementById('error'),
- toast:document.getElementById('toast')
-};
-function toast(m){$.toast.textContent=m;$.toast.classList.add('show');setTimeout(()=>$.toast.classList.remove('show'),2200)}
-function setErr(m){if(!m){$.err.style.display='none';$.err.textContent='';return}$.err.style.display='block';$.err.textContent=m}
-function setStatus(mode,t){$.status.innerHTML=`<span class="dot ${mode||''}"></span>${t}`}
-function updateUI(){if(email){$.email.textContent=email;$.email.classList.remove('empty');$.copy.disabled=false;$.ref.disabled=false;localStorage.setItem(KEY,email)}else{$.email.textContent='Belum ada email — klik Generate';$.email.classList.add('empty');$.copy.disabled=true;$.ref.disabled=true}}
-function copyEmail(){if(!email)return;navigator.clipboard.writeText(email).then(()=>toast('Email disalin'))}
-async function generateEmail(){setErr('');$.gen.disabled=true;$.gen.textContent='Generating...';setStatus('busy','Membuat email...');try{const r=await fetch('/api/create');const d=await r.json();if(!r.ok||!d.status||!d.result?.email)throw new Error(d.message||'Gagal generate');email=d.result.email;expanded=null;updateUI();toast('Email baru dibuat');await refreshInbox(true);startPoll()}catch(e){setErr(e.message||'Error');setStatus('','Error')}finally{$.gen.disabled=false;$.gen.textContent='Generate'}}
-function startPoll(){stopPoll();if(!email)return;timer=setInterval(()=>refreshInbox(false),8000)}
-function stopPoll(){if(timer){clearInterval(timer);timer=null}}
-async function refreshInbox(manual){if(!email)return;if(manual){$.ref.disabled=true;setStatus('busy','Cek inbox...')}try{const r=await fetch('/api/inbox?email='+encodeURIComponent(email));const d=await r.json();if(!r.ok||!d.status)throw new Error(d.message||'Gagal inbox');lastMsgs=d.result?.messages||[];render(lastMsgs);setStatus('live','Listening · '+email.split('@')[1]);setErr('')}catch(e){if(manual)setErr(e.message||'Error');setStatus('','Gagal refresh')}finally{$.ref.disabled=!email}}
-function pick(o,ks,f=''){for(const k of ks)if(o&&o[k]!=null&&o[k]!=='')return o[k];return f}
-function extractLinks(text){if(!text)return[];const plain=String(text).replace(/&/g,'&').replace(/href=["']([^"']+)["']/gi,' $1 ').replace(/<[^>]+>/g,' ');const found=plain.match(/https?:\/\/[^\s<>"')\]]+/gi)||[];const cleaned=found.map(u=>u.replace(/[.,;:!?)>\]]+$/g,''));return[...new Set(cleaned)]}
-function pickMagic(links){if(!links.length)return null;const scored=links.map(url=>{const u=url.toLowerCase();let s=0;if(/alight|alightcreative|alightmotion/.test(u))s+=5;if(/magic|signin|sign-in|login|auth|verify|verification|confirm|token|otp|link/.test(u))s+=4;if(/firebaseapp|firebase|auth\.|oauth|sso/.test(u))s+=3;if(/click|redirect|continue|action/.test(u))s+=1;if(/unsubscribe|mailto:|pixel|track/.test(u))s-=5;return{url,score:s}});scored.sort((a,b)=>b.score-a.score);return scored[0].score>0?scored[0].url:links[0]}
-function classify(subject,body,from){const text=((subject||'')+' '+(body||'')+' '+(from||'')).toLowerCase();const isAlight=/alight\s*creative|alightcreative|alight\s*motion/.test(text);const login=/login\s+ke\s+alight|log\s*in\s+to\s+alight|approve\s+(this\s+)?login|setujui\s+(untuk\s+)?login|new\s+login|login\s+request|sign\s*in\s+request|konfirmasi\s+login|izinkan\s+login|login\s+attempt/.test(text);const verify=/sign\s*in\s+to\s+alight|verify\s+(your\s+)?(email|account)|verification|verifikasi|confirm\s+(your\s+)?email|magic\s+link|email\s+confirmation/.test(text);if(login)return'login';if(verify)return'verify';if(isAlight){if(/sign\s*in|signin/.test(text))return'verify';if(/login|log\s*in/.test(text))return'login';return'verify'}if(/login|log\s*in|approve/.test(text))return'login';if(/verify|verification|confirm|sign\s*in/.test(text))return'verify';return'generic'}
-function esc(s){return String(s).replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>').replace(/"/g,'"')}
-function escA(s){return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
-function render(msgs){$.count.textContent=msgs.length?`(${msgs.length})`:'';if(!msgs.length){$.inbox.innerHTML='<div class="empty">Inbox kosong. Kirim email ke alamat di atas.</div>';return}
-$.inbox.innerHTML=msgs.map((m,i)=>{const id=String(pick(m,['id','messageId','_id'],i));const from=pick(m,['from','sender','from_email','mail_from'],'Unknown');const sub=pick(m,['subject','title'],'(no subject)');const time=pick(m,['date','time','created_at','timestamp'],'');const body=pick(m,['body','text','content','message','html'],'');const open=expanded===id;const links=extractLinks(body+' '+sub);const magic=pickMagic(links);const kind=classify(sub,body,from);let tc='';if(magic)tc=' '+(kind==='login'?'login-type':kind==='verify'?'verify-type':'generic-type');
-let h=`<div class="msg${tc}"><div class="msg-top" onclick="toggle('${escA(id)}')"><div class="from">${esc(from)}</div><div class="subj">${esc(sub)}</div>${time?`<div class="time">${esc(time)}</div>`:''}</div>`;
-if(magic){if(kind==='login'){h+=`<div class="magic login"><div class="ml login">🔐 Login ke Alight Creative terdeteksi</div><div class="ma"><button class="btn btn-link" onclick="event.stopPropagation();copyLink('${escA(magic)}','Link login disalin')">Copy link login</button><button class="btn btn-login" onclick="event.stopPropagation();openLink('${escA(magic)}')">Setujui untuk login</button></div><div class="mu">${esc(magic)}</div></div>`}else if(kind==='verify'){h+=`<div class="magic verify"><div class="ml verify">✉️ Sign in / verifikasi terdeteksi</div><div class="ma"><button class="btn btn-link" onclick="event.stopPropagation();copyLink('${escA(magic)}','Link verifikasi disalin')">Copy link verifikasi</button><button class="btn btn-verify" onclick="event.stopPropagation();openLink('${escA(magic)}')">Setujui link verifikasi</button></div><div class="mu">${esc(magic)}</div></div>`}else{h+=`<div class="magic"><div class="ml" style="color:var(--accent)">🔗 Link terdeteksi</div><div class="ma"><button class="btn btn-link" onclick="event.stopPropagation();copyLink('${escA(magic)}','Link disalin')">Copy link</button><button class="btn primary" onclick="event.stopPropagation();openLink('${escA(magic)}')">Buka link</button></div><div class="mu">${esc(magic)}</div></div>`}}
-if(open)h+=`<div class="body">${esc(body)||'<em style=color:var(--muted)>(empty)</em>'}</div>`;h+='</div>';return h}).join('')}
-function toggle(id){expanded=expanded===String(id)?null:String(id);render(lastMsgs)}
+const KEY_ACTIVE='tempmail_email',KEY_SAVED='tempmail_saved_v1',MAX_SAVED=30;
+let currentEmail=localStorage.getItem(KEY_ACTIVE)||'',pollTimer=null,expandedId=null,lastMessages=[];
+const el={email:document.getElementById('emailDisplay'),btnGen:document.getElementById('btnGen'),btnCopy:document.getElementById('btnCopy'),btnRefresh:document.getElementById('btnRefresh'),inbox:document.getElementById('inbox'),msgCount:document.getElementById('msgCount'),status:document.getElementById('statusLine'),error:document.getElementById('error'),toast:document.getElementById('toast'),savedList:document.getElementById('savedList'),savedCount:document.getElementById('savedCount'),searchInput:document.getElementById('searchInput')};
+function toast(m){el.toast.textContent=m;el.toast.classList.add('show');setTimeout(()=>el.toast.classList.remove('show'),2200)}
+function setError(m){if(!m){el.error.style.display='none';el.error.textContent='';return}el.error.style.display='block';el.error.textContent=m}
+function setStatus(mode,t){el.status.innerHTML='<span class="dot '+(mode||'')+'"></span>'+t}
+function loadSaved(){try{const r=localStorage.getItem(KEY_SAVED);const l=r?JSON.parse(r):[];return Array.isArray(l)?l:[]}catch(e){return[]}}
+function writeSaved(list){localStorage.setItem(KEY_SAVED,JSON.stringify(list.slice(0,MAX_SAVED)))}
+function autoSaveEmail(address){if(!address)return;let list=loadSaved().filter(x=>x.email!==address);list.unshift({email:address,savedAt:Date.now()});writeSaved(list);renderSaved()}
+function removeSaved(address,ev){if(ev)ev.stopPropagation();writeSaved(loadSaved().filter(x=>x.email!==address));renderSaved();toast('Email dihapus dari saved')}
+function clearSaved(){if(!loadSaved().length)return;if(!confirm('Hapus semua saved email?'))return;writeSaved([]);renderSaved();toast('Saved dibersihkan')}
+function formatTime(ts){if(!ts)return'';const d=new Date(ts),n=new Date();if(d.toDateString()===n.toDateString())return d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});return d.toLocaleDateString('id-ID',{day:'2-digit',month:'short'})}
+function renderSaved(){const list=loadSaved();el.savedCount.textContent=list.length?'('+list.length+')':'';if(!list.length){el.savedList.innerHTML='<div class="saved-empty">Belum ada email tersimpan. Generate akan auto-save.</div>';return}el.savedList.innerHTML=list.map(item=>{const active=item.email===currentEmail?' active':'';return '<div class="saved-item'+active+'" onclick="selectSaved(\''+escapeAttr(item.email)+'\')"><div class="saved-email">'+escapeHtml(item.email)+'</div><span class="saved-meta">'+formatTime(item.savedAt)+'</span><button class="btn btn-danger" onclick="removeSaved(\''+escapeAttr(item.email)+'\', event)">Hapus</button></div>'}).join('')}
+function selectSaved(address){currentEmail=address;localStorage.setItem(KEY_ACTIVE,currentEmail);el.searchInput.value=address;updateEmailUI();renderSaved();expandedId=null;toast('Inbox: '+address);refreshInbox(true);startPolling()}
+function updateEmailUI(){if(currentEmail){el.email.textContent=currentEmail;el.email.classList.remove('empty');el.btnCopy.disabled=false;el.btnRefresh.disabled=false;localStorage.setItem(KEY_ACTIVE,currentEmail)}else{el.email.textContent='Belum ada email — klik Generate';el.email.classList.add('empty');el.btnCopy.disabled=true;el.btnRefresh.disabled=true}}
+function copyEmail(){if(!currentEmail)return;navigator.clipboard.writeText(currentEmail).then(()=>toast('Email disalin'))}
+async function generateEmail(){setError('');el.btnGen.disabled=true;el.btnGen.textContent='Generating...';setStatus('busy','Membuat email...');try{const res=await fetch('/api/create');const data=await res.json();if(!res.ok||!data.status||!data.result||!data.result.email)throw new Error(data.message||'Gagal generate email');currentEmail=data.result.email;expandedId=null;autoSaveEmail(currentEmail);el.searchInput.value=currentEmail;updateEmailUI();renderSaved();toast('Email baru + auto-saved');await refreshInbox(true);startPolling()}catch(err){setError(err.message||'Error generate');setStatus('','Error')}finally{el.btnGen.disabled=false;el.btnGen.textContent='Generate'}}
+function searchByEmail(){const raw=(el.searchInput.value||'').trim().toLowerCase();if(!raw){setError('Masukkan alamat email dulu');return}if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw)){setError('Format email tidak valid');return}setError('');currentEmail=raw;autoSaveEmail(currentEmail);localStorage.setItem(KEY_ACTIVE,currentEmail);updateEmailUI();renderSaved();expandedId=null;toast('Mencari inbox: '+raw);refreshInbox(true);startPolling()}
+el.searchInput.addEventListener('keydown',e=>{if(e.key==='Enter')searchByEmail()});
+function startPolling(){stopPolling();if(!currentEmail)return;pollTimer=setInterval(()=>refreshInbox(false),8000)}
+function stopPolling(){if(pollTimer){clearInterval(pollTimer);pollTimer=null}}
+async function refreshInbox(manual){if(!currentEmail)return;if(manual){el.btnRefresh.disabled=true;setStatus('busy','Cek inbox...')}try{const res=await fetch('/api/inbox?email='+encodeURIComponent(currentEmail));const data=await res.json();if(!res.ok||!data.status)throw new Error(data.message||'Gagal ambil inbox');lastMessages=(data.result&&data.result.messages)||[];renderInbox(lastMessages);setStatus('live','Listening · '+currentEmail.split('@')[1]);setError('')}catch(err){if(manual)setError(err.message||'Error inbox');setStatus('','Gagal refresh')}finally{el.btnRefresh.disabled=!currentEmail}}
+function pickField(obj,keys,fallback){if(fallback===undefined)fallback='';for(let i=0;i<keys.length;i++){const k=keys[i];if(obj&&obj[k]!=null&&obj[k]!=='')return obj[k]}return fallback}
+function extractLinks(text){if(!text)return[];const plain=String(text).replace(/&/g,'&').replace(/href=["']([^"']+)["']/gi,' $1 ').replace(/<[^>]+>/g,' ');const found=plain.match(/https?:\/\/[^\s<>"')\]]+/gi)||[];return Array.from(new Set(found.map(u=>u.replace(/[.,;:!?)>\]]+$/g,''))))}
+function pickMagic(links){if(!links.length)return null;const scored=links.map(url=>{const u=url.toLowerCase();let s=0;if(/alight|alightcreative|alightmotion/.test(u))s+=5;if(/magic|signin|sign-in|login|auth|verify|verification|confirm|token|otp|link/.test(u))s+=4;if(/firebaseapp|firebase|auth\.|oauth|sso/.test(u))s+=3;if(/unsubscribe|mailto:|pixel|track/.test(u))s-=5;return{url,score:s}});scored.sort((a,b)=>b.score-a.score);return scored[0].score>0?scored[0].url:links[0]}
+function classify(subject,body,from){const text=((subject||'')+' '+(body||'')+' '+(from||'')).toLowerCase();const isAlight=/alight\s*creative|alightcreative|alight\s*motion/.test(text);const login=/login\s+ke\s+alight|log\s*in\s+to\s+alight|approve\s+(this\s+)?login|setujui\s+(untuk\s+)?login|new\s+login|login\s+request|login\s+attempt/.test(text);const verify=/sign\s*in\s+to\s+alight|verify\s+(your\s+)?(email|account)|verification|verifikasi|confirm\s+(your\s+)?email|magic\s+link/.test(text);if(login)return'login';if(verify)return'verify';if(isAlight){if(/sign\s*in|signin/.test(text))return'verify';if(/login|log\s*in/.test(text))return'login';return'verify'}if(/login|log\s*in|approve/.test(text))return'login';if(/verify|verification|confirm|sign\s*in/.test(text))return'verify';return'generic'}
+function escapeHtml(s){return String(s).replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>').replace(/"/g,'"')}
+function escapeAttr(s){return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
+function renderInbox(messages){el.msgCount.textContent=messages.length?'('+messages.length+')':'';if(!messages.length){el.inbox.innerHTML='<div class="empty">Inbox kosong untuk <b style="color:var(--accent)">'+escapeHtml(currentEmail||'-')+'</b></div>';return}el.inbox.innerHTML=messages.map((m,i)=>{const id=String(pickField(m,['id','messageId','_id'],String(i)));const from=pickField(m,['from','sender','from_email','mail_from'],'Unknown');const subject=pickField(m,['subject','title'],'(no subject)');const time=pickField(m,['date','time','created_at','timestamp'],'');const body=pickField(m,['body','text','content','message','html'],'');const open=expandedId===id;const magic=pickMagic(extractLinks(body+' '+subject));const kind=classify(subject,body,from);const tc=magic?(' '+(kind==='login'?'login-type':kind==='verify'?'verify-type':'generic-type')):'';let h='<div class="msg'+tc+'"><div class="msg-top" onclick="toggleMsg(\''+escapeAttr(id)+'\')"><div class="from">'+escapeHtml(String(from))+'</div><div class="subj">'+escapeHtml(String(subject))+'</div>'+(time?'<div class="time">'+escapeHtml(String(time))+'</div>':'')+'</div>';if(magic){if(kind==='login'){h+='<div class="magic login"><div class="ml login">🔐 Login ke Alight Creative terdeteksi</div><div class="ma"><button class="btn btn-link" onclick="event.stopPropagation();copyLink(\''+escapeAttr(magic)+'\',\'Link login disalin\')">Copy link login</button><button class="btn btn-login" onclick="event.stopPropagation();openLink(\''+escapeAttr(magic)+'\')">Setujui untuk login</button></div><div class="mu">'+escapeHtml(magic)+'</div></div>'}else if(kind==='verify'){h+='<div class="magic verify"><div class="ml verify">✉️ Sign in / verifikasi terdeteksi</div><div class="ma"><button class="btn btn-link" onclick="event.stopPropagation();copyLink(\''+escapeAttr(magic)+'\',\'Link verifikasi disalin\')">Copy link verifikasi</button><button class="btn btn-verify" onclick="event.stopPropagation();openLink(\''+escapeAttr(magic)+'\')">Setujui link verifikasi</button></div><div class="mu">'+escapeHtml(magic)+'</div></div>'}else{h+='<div class="magic"><div class="ml" style="color:var(--accent)">🔗 Link terdeteksi</div><div class="ma"><button class="btn btn-link" onclick="event.stopPropagation();copyLink(\''+escapeAttr(magic)+'\',\'Link disalin\')">Copy link</button><button class="btn primary" onclick="event.stopPropagation();openLink(\''+escapeAttr(magic)+'\')">Buka link</button></div><div class="mu">'+escapeHtml(magic)+'</div></div>'}}if(open)h+='<div class="body">'+(escapeHtml(String(body))||'<em style="color:var(--muted)">(empty)</em>')+'</div>';h+='</div>';return h}).join('')}
+function toggleMsg(id){expandedId=expandedId===String(id)?null:String(id);renderInbox(lastMessages)}
 function copyLink(url,msg){navigator.clipboard.writeText(url).then(()=>toast(msg||'Link disalin'))}
 function openLink(url){window.open(url,'_blank','noopener,noreferrer');toast('Membuka link...')}
-updateUI();if(email){refreshInbox(true);startPoll()}
+updateEmailUI();renderSaved();if(currentEmail){el.searchInput.value=currentEmail;autoSaveEmail(currentEmail);refreshInbox(true);startPolling()}
 </script>
 </body>
 </html>
