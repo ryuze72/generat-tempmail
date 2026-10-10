@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Temp Mail — Generator Email Sementara</title>
+  <meta name="description" content="Generate temporary email and check inbox instantly. Free temp mail." />
+  <style>
+    :root {
+      --bg: #07090f;
+      --card: #0e121b;
+      --elevated: #151b27;
+      --border: #1e2636;
+      --text: #eef2ff;
+      --muted: #8b95a8;
+      --accent: #6ee7b7;
+      --accent2: #60a5fa;
+      --danger: #fb7185;
+      --radius: 16px;
+      --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% -10%, rgba(110, 231, 183, 0.12), transparent),
+        radial-gradient(ellipse 60% 40% at 90% 10%, rgba(96, 165, 250, 0.1), transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 28px 18px 64px;
+    }
+    header { text-align: center; margin-bottom: 28px; }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.35rem;
+      letter-spacing: -0.03em;
+    }
+    .logo-mark {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: grid; place-items: center;
+      color: #041016;
+      font-size: 1rem;
+    }
+    .tagline { color: var(--muted); font-size: 0.9rem; margin-top: 8px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .email-box {
+      display: flex;
+      gap: 10px;
+      align-items: stretch;
+      flex-wrap: wrap;
+    }
+    .email-display {
+      flex: 1;
+      min-width: 200px;
+      background: var(--elevated);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      word-break: break-all;
+      color: var(--accent);
+    }
+    .email-display.empty { color: var(--muted); font-weight: 500; font-size: 0.95rem; }
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.15s ease;
+      white-space: nowrap;
+    }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #34d399);
+      color: #042f1a;
+    }
+    .btn-primary:hover:not(:disabled) { filter: brightness(1.06); }
+    .btn-ghost {
+      background: var(--elevated);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover:not(:disabled) { border-color: var(--muted); }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--muted);
+      display: inline-block;
+      margin-right: 6px;
+    }
+    .status-dot.live { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+    .status-dot.busy { background: var(--accent2); animation: pulse 1s infinite; }
+    @keyframes pulse { 50% { opacity: 0.4; } }
+    .inbox-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 10px;
+    }
+    .inbox-header h2 { font-size: 1rem; }
+    .empty-inbox {
+      text-align: center;
+      padding: 36px 16px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    .empty-inbox .icon { font-size: 2rem; margin-bottom: 8px; opacity: 0.6; }
+    .msg {
+      background: var(--elevated);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .msg:hover { border-color: #2d3a52; }
+    .msg.active { border-color: var(--accent2); }
+    .msg-from { font-weight: 600; font-size: 0.92rem; margin-bottom: 4px; }
+    .msg-subject { color: var(--muted); font-size: 0.86rem; margin-bottom: 6px; }
+    .msg-time { font-size: 0.75rem; color: var(--muted); opacity: 0.8; }
+    .msg-body {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      font-size: 0.88rem;
+      color: var(--text);
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 320px;
+      overflow: auto;
+    }
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--elevated);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      z-index: 50;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.2s;
+    }
+    .toast.show { opacity: 1; }
+    .error {
+      background: rgba(251, 113, 133, 0.1);
+      border: 1px solid rgba(251, 113, 133, 0.3);
+      color: var(--danger);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 0.88rem;
+      margin-bottom: 12px;
+      display: none;
+    }
+    footer {
+      text-align: center;
+      margin-top: 28px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">
+        <span class="logo-mark">✉</span>
+        Temp Mail
+      </div>
+      <p class="tagline">Email sementara · inbox real-time · tanpa daftar</p>
+    </header>
+    <div class="error" id="error"></div>
+    <section class="card">
+      <div class="card-title">Alamat email</div>
+      <div class="email-box">
+        <div class="email-display empty" id="emailDisplay">Belum ada email — klik Generate</div>
+        <div class="actions">
+          <button class="btn btn-ghost" id="btnCopy" disabled onclick="copyEmail()">Copy</button>
+          <button class="btn btn-primary" id="btnGen" onclick="generateEmail()">Generate</button>
+        </div>
+      </div>
+      <div class="meta-row">
+        <span id="statusLine"><span class="status-dot" id="statusDot"></span>Siaga</span>
+        <span id="refreshInfo">Auto-refresh 10 detik</span>
+      </div>
+    </section>
+    <section class="card">
+      <div class="inbox-header">
+        <h2>Inbox <span id="msgCount" style="color:var(--muted);font-weight:500"></span></h2>
+        <button class="btn btn-ghost" id="btnRefresh" disabled onclick="refreshInbox(true)">Refresh</button>
+      </div>
+      <div id="inbox">
+        <div class="empty-inbox">
+          <div class="icon">📥</div>
+          Generate email dulu, lalu pesan masuk akan muncul di sini.
+        </div>
+      </div>
+    </section>
+    <footer>Proxy backend · API Theresa · Tidak untuk spam / aktivitas ilegal</footer>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script>
+    const STORAGE_KEY = 'tempmail_email';
+    let currentEmail = localStorage.getItem(STORAGE_KEY) || '';
+    let pollTimer = null;
+    let expandedId = null;
+    let lastMessages = [];
+    const el = {
+      email: document.getElementById('emailDisplay'),
+      btnGen: document.getElementById('btnGen'),
+      btnCopy: document.getElementById('btnCopy'),
+      btnRefresh: document.getElementById('btnRefresh'),
+      inbox: document.getElementById('inbox'),
+      msgCount: document.getElementById('msgCount'),
+      statusLine: document.getElementById('statusLine'),
+      error: document.getElementById('error'),
+      toast: document.getElementById('toast'),
+    };
+    function toast(msg) {
+      el.toast.textContent = msg;
+      el.toast.classList.add('show');
+      setTimeout(() => el.toast.classList.remove('show'), 2000);
+    }
+    function setError(msg) {
+      if (!msg) { el.error.style.display = 'none'; el.error.textContent = ''; return; }
+      el.error.style.display = 'block';
+      el.error.textContent = msg;
+    }
+    function setStatus(mode, text) {
+      el.statusLine.innerHTML = '<span class="status-dot ' + (mode === 'live' ? 'live' : mode === 'busy' ? 'busy' : '') + '"></span>' + text;
+    }
+    function updateEmailUI() {
+      if (currentEmail) {
+        el.email.textContent = currentEmail;
+        el.email.classList.remove('empty');
+        el.btnCopy.disabled = false;
+        el.btnRefresh.disabled = false;
+        localStorage.setItem(STORAGE_KEY, currentEmail);
+      } else {
+        el.email.textContent = 'Belum ada email — klik Generate';
+        el.email.classList.add('empty');
+        el.btnCopy.disabled = true;
+        el.btnRefresh.disabled = true;
+      }
+    }
+    function copyEmail() {
+      if (!currentEmail) return;
+      navigator.clipboard.writeText(currentEmail).then(() => toast('Email disalin'));
+    }
+    async function generateEmail() {
+      setError('');
+      el.btnGen.disabled = true;
+      el.btnGen.textContent = 'Generating...';
+      setStatus('busy', 'Membuat email...');
+      try {
+        const res = await fetch('/api/create');
+        const data = await res.json();
+        if (!res.ok || !data.status || !data.result || !data.result.email) {
+          throw new Error(data.message || 'Gagal generate email');
+        }
+        currentEmail = data.result.email;
+        expandedId = null;
+        updateEmailUI();
+        toast('Email baru dibuat');
+        await refreshInbox(true);
+        startPolling();
+      } catch (err) {
+        setError(err.message || 'Error generate');
+        setStatus('', 'Error');
+      } finally {
+        el.btnGen.disabled = false;
+        el.btnGen.textContent = 'Generate';
+      }
+    }
+    function startPolling() {
+      stopPolling();
+      if (!currentEmail) return;
+      pollTimer = setInterval(function() { refreshInbox(false); }, 10000);
+    }
+    function stopPolling() {
+      if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    }
+    async function refreshInbox(manual) {
+      if (!currentEmail) return;
+      if (manual) {
+        el.btnRefresh.disabled = true;
+        setStatus('busy', 'Cek inbox...');
+      }
+      try {
+        const res = await fetch('/api/inbox?email=' + encodeURIComponent(currentEmail));
+        const data = await res.json();
+        if (!res.ok || !data.status) {
+          throw new Error(data.message || 'Gagal ambil inbox');
+        }
+        const messages = (data.result && data.result.messages) || [];
+        lastMessages = messages;
+        renderInbox(messages);
+        setStatus('live', 'Listening · ' + currentEmail.split('@')[1]);
+        setError('');
+      } catch (err) {
+        if (manual) setError(err.message || 'Error inbox');
+        setStatus('', 'Gagal refresh');
+      } finally {
+        el.btnRefresh.disabled = !currentEmail;
+      }
+    }
+    function pickField(obj, keys, fallback) {
+      if (fallback === undefined) fallback = '';
+      for (var i = 0; i < keys.length; i++) {
+        var k = keys[i];
+        if (obj && obj[k] != null && obj[k] !== '') return obj[k];
+      }
+      return fallback;
+    }
+    function renderInbox(messages) {
+      el.msgCount.textContent = messages.length ? '(' + messages.length + ')' : '';
+      if (!messages.length) {
+        el.inbox.innerHTML = '<div class="empty-inbox"><div class="icon">📭</div>Inbox kosong. Kirim email ke alamat di atas, lalu tunggu beberapa detik.</div>';
+        return;
+      }
+      el.inbox.innerHTML = messages.map(function(m, i) {
+        var id = String(pickField(m, ['id', 'messageId', '_id'], String(i)));
+        var from = pickField(m, ['from', 'sender', 'from_email', 'mail_from'], 'Unknown');
+        var subject = pickField(m, ['subject', 'title'], '(no subject)');
+        var time = pickField(m, ['date', 'time', 'created_at', 'timestamp'], '');
+        var body = pickField(m, ['body', 'text', 'content', 'message', 'html'], '');
+        var open = expandedId === id;
+        var html = '<div class="msg ' + (open ? 'active' : '') + '" onclick="toggleMsg(\'' + id.replace(/'/g, "\\'") + '\')">';
+        html += '<div class="msg-from">' + escapeHtml(String(from)) + '</div>';
+        html += '<div class="msg-subject">' + escapeHtml(String(subject)) + '</div>';
+        if (time) html += '<div class="msg-time">' + escapeHtml(String(time)) + '</div>';
+        if (open) html += '<div class="msg-body">' + (escapeHtml(String(body)) || '<em style="color:var(--muted)">(empty body)</em>') + '</div>';
+        html += '</div>';
+        return html;
+      }).join('');
+    }
+    function toggleMsg(id) {
+      expandedId = expandedId === String(id) ? null : String(id);
+      renderInbox(lastMessages);
+    }
+    function escapeHtml(s) {
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    updateEmailUI();
+    if (currentEmail) {
+      refreshInbox(true);
+      startPolling();
+    }
+  </script>
+</body>
+</html>
